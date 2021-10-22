@@ -6,8 +6,14 @@ import time
 
 BACKGROUND_COLOR = "#B1DDC6"
 
-data = pandas.read_csv("data/french_words.csv")
-to_learn = data.to_dict(orient="records") #argument changes format of to_learn dictionary
+try:
+    data = pandas.read_csv("data/words_to_learn.csv")
+
+except:
+    data = pandas.read_csv("data/french_words.csv")
+
+finally:
+    to_learn = data.to_dict(orient="records") #argument changes format of to_learn dictionary
 #print(to_learn)
 current_card = {}
 
@@ -34,12 +40,19 @@ def flip_card():
     canvas.itemconfig(card_word, text=current_card["English"], fill="white")
     canvas.itemconfig(card_background, image=card_back_img)
 
+    print(current_card)
+
 def update_dictionary():
-    # print("FART")
-    to_learn.remove
-    pass
+    #to_learn is a list of dictionaries.  current_card is a dictionary.
+    #remove method removes each dictionary.  triggered with check button.  used lambda to call group of functions
+    to_learn.remove(current_card)
 
+    #DataFrame method takes list of dicionaries and places them in df.  df type is DataFrame.
+    df = pandas.DataFrame(to_learn)
 
+    #pandas method then creates a file with dataframe data stored in df.  creates two columns with headers of French
+    #and English.  each column has corresponding words.
+    df.to_csv('data/words_to_learn.csv', index= False)
 
 window = Tk()
 window.title("Flashy")
@@ -48,7 +61,7 @@ window.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
 #after method allows delay in milliseconds.  second argument is function call.
 flip_timer = window.after(3000, func=flip_card)
 
-canvas = Canvas(width=800, heigh=526)
+canvas = Canvas(width=800, height=526)
 card_front_img = PhotoImage(file="images/card_front.png")
 card_back_img = PhotoImage(file="images/card_back.png")
 
