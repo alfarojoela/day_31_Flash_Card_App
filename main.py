@@ -11,6 +11,10 @@ to_learn = data.to_dict(orient="records") #argument changes format of to_learn d
 #print(to_learn)
 current_card = {}
 
+
+
+
+
 def next_card():
     global current_card
     global flip_timer
@@ -30,7 +34,10 @@ def flip_card():
     canvas.itemconfig(card_word, text=current_card["English"], fill="white")
     canvas.itemconfig(card_background, image=card_back_img)
 
-
+def update_dictionary():
+    # print("FART")
+    to_learn.remove
+    pass
 
 
 
@@ -66,7 +73,9 @@ unknown_button = Button(image=cross_image, command=next_card)
 unknown_button.grid(row=1, column=0)
 
 check_image=PhotoImage(file="images/right.png")
-known_button = Button(image=check_image, command=next_card)
+
+#when using lambda for multiple commands need to execute with function calls in a list.
+known_button = Button(image=check_image, command=lambda:[next_card(), update_dictionary()])
 known_button.grid(row=1, column=1)
 
 next_card()  #first call when app is started.  avoids place holder
