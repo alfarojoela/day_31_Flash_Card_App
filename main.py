@@ -9,10 +9,10 @@ BACKGROUND_COLOR = "#B1DDC6"
 try:
     data = pandas.read_csv("data/words_to_learn.csv")
 
-except:
-    data = pandas.read_csv("data/french_words.csv")
-
-finally:
+except FileNotFoundError: #did not include FileNotFoundError in prior code.
+    original_data = pandas.read_csv("data/french_words.csv")
+    to_learn = original_data.to_dict(orient="records")
+else:
     to_learn = data.to_dict(orient="records") #argument changes format of to_learn dictionary
 #print(to_learn)
 current_card = {}
@@ -42,7 +42,7 @@ def flip_card():
 
     print(current_card)
 
-def update_dictionary():
+def is_known():
     #to_learn is a list of dictionaries.  current_card is a dictionary.
     #remove method removes each dictionary.  triggered with check button.  used lambda to call group of functions
     to_learn.remove(current_card)
@@ -53,6 +53,8 @@ def update_dictionary():
     #pandas method then creates a file with dataframe data stored in df.  creates two columns with headers of French
     #and English.  each column has corresponding words.
     df.to_csv('data/words_to_learn.csv', index= False)
+
+    next_card()
 
 window = Tk()
 window.title("Flashy")
@@ -88,7 +90,7 @@ unknown_button.grid(row=1, column=0)
 check_image=PhotoImage(file="images/right.png")
 
 #when using lambda for multiple commands need to execute with function calls in a list.
-known_button = Button(image=check_image, command=lambda:[next_card(), update_dictionary()])
+known_button = Button(image=check_image, command=is_known)
 known_button.grid(row=1, column=1)
 
 next_card()  #first call when app is started.  avoids place holder
